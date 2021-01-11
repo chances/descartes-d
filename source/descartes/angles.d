@@ -34,14 +34,8 @@ N signedAngleTo(V2 a, V2 b) {
   return det.atan2(dot);
 }
 
-version (unittest) {
-  const up = V2(0, -1);
-  const down = V2(0, 1);
-  const left = V2(1, 0);
-  const right = V2(-1, 0);
-}
-
 unittest {
+  import descartes : up, down, left, right;
   import std.math : approxEqual;
 
   assert(V2(3).angleTo(V2(4)) == 0.0);
@@ -79,7 +73,7 @@ V2 orthogonalLeft(V2 self) {
 }
 
 unittest {
-  import std.stdio : writeln;
+  import descartes : up, down, left, right;
 
   assert(up.orthogonalRight == right);
   assert(down.orthogonalRight == left);

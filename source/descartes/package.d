@@ -55,3 +55,10 @@ N norm(V2 x) {
 
   return sqrt(x.v[].sum);
 }
+
+version (unittest) {
+  const up = V2(0, -1);
+  const down = V2(0, 1);
+  const left = V2(1, 0);
+  const right = V2(-1, 0);
+}
