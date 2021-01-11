@@ -6,6 +6,16 @@
 
 Imprecision-tolerant computational geometry for [D](https://dlang.org).
 
+## Usage
+
+```json
+"dependencies": {
+    "descartes": "0.1.0"
+}
+```
+
+<!-- TODO: Usage examples -->
+
 ## License
 
 A port of https://github.com/aeplay/descartes, under the [MIT License](https://github.com/aeplay/descartes/blob/master/LICENSE):
