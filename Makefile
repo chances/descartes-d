@@ -9,10 +9,12 @@ all: docs
 
 test:
 	dub test
+	@sh scripts/delete-junk-lst-files.sh
 .PHONY: test
 
 cover: $(SOURCES)
 	dub test --coverage
+	@sh scripts/delete-junk-lst-files.sh
 
 PACKAGE_VERSION := 0.1.0
 docs/sitemap.xml: $(SOURCES)
@@ -27,6 +29,7 @@ docs: docs/sitemap.xml
 clean: clean-docs
 	rm -rf bin $(EXAMPLES)
 	rm -f -- *.lst
+	sh scripts/delete-junk-lst-files.sh
 .PHONY: clean
 
 clean-docs:
