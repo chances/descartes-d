@@ -34,12 +34,31 @@ N signedAngleTo(V2 a, V2 b) {
   return det.atan2(dot);
 }
 
-//
-//  DESCARTES ASSUMES
-//  A RIGHT HAND COORDINATE SYSTEM
-//
-//  positive angles are counter-clockwise if z axis points out of screen
-//
+version (unittest) {
+  const up = V2(0, -1);
+  const down = V2(0, 1);
+  const left = V2(1, 0);
+  const right = V2(-1, 0);
+}
+
+unittest {
+  import std.math : approxEqual;
+
+  assert(V2(3).angleTo(V2(4)) == 0.0);
+  assert((V2(3, 0).angleTo(V2(0, -4))) == 0.0);
+  assert((V2(3, 7).angleTo(V2(2, -4))) == 0.0);
+  assert((V2(3, 0).angleTo(V2(0, 4))).approxEqual(1.5708));
+
+  assert((V2(3, 0).angleAlongTo(up, V2(3, 4))).approxEqual(6.28319));
+  assert((V2(3, 0).angleAlongTo(down, V2(3, 4))) == 0.0);
+  assert((V2(3, 0).angleAlongTo(left, V2(3, 4))) == 0.0);
+  assert((V2(3, 0).angleAlongTo(right, V2(3, 4))) == 0.0);
+
+  assert(V2(3).signedAngleTo(V2(4)) == 0.0);
+  assert(V2(3, 0).signedAngleTo(V2(0, -4)).approxEqual(-1.5708));
+  assert(V2(3, 7).signedAngleTo(V2(2, -4)).approxEqual(-2.27305));
+  assert(V2(3, 0).signedAngleTo(V2(0, 4)).approxEqual(1.5708));
+}
 
 ///
 /// Warning:
@@ -57,4 +76,18 @@ V2 orthogonalRight(V2 self) {
 /// Positive angles are counter-clockwise if z-axis points offscreen.
 V2 orthogonalLeft(V2 self) {
   return -self.orthogonalRight;
+}
+
+unittest {
+  import std.stdio : writeln;
+
+  assert(up.orthogonalRight == right);
+  assert(down.orthogonalRight == left);
+  assert(left.orthogonalRight == up);
+  assert(right.orthogonalRight == down);
+
+  assert(up.orthogonalLeft == left);
+  assert(down.orthogonalLeft == right);
+  assert(left.orthogonalLeft == down);
+  assert(right.orthogonalLeft == up);
 }
