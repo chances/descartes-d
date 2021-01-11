@@ -6,7 +6,7 @@
 
 Imprecision-tolerant computational geometry for [D](https://dlang.org).
 
-# License
+## License
 
 A port of https://github.com/aeplay/descartes, under the [MIT License](https://github.com/aeplay/descartes/blob/master/LICENSE):
 
