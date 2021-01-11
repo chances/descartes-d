@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>http://127.0.0.1/index.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/embedding/area.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/grid/segment.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/path/arc.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/path/closed.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/path/line.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/angles.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/bands.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/bbox.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/convert.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/embedding.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/grid.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/intersect.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/path.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/rough.html</loc></url>
+<url><loc>http://127.0.0.1/descartes.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/Affine3.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/M4.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/N.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/P2.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/P3.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/Perspective3.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/V2.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/V3.html</loc></url>
+<url><loc>http://127.0.0.1/descartes/V4.html</loc></url>
+</urlset>
