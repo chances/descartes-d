@@ -1,0 +1,15 @@
+{
+  "name": "descartes",
+  "description": "Imprecision-tolerant computational geometry for D",
+  "license": "MIT",
+  "copyright": "Copyright © 2021, Chance Snow;Copyright © 2018, Anselm Eickhoff",
+  "authors": [
+    "Chance Snow",
+    "Anselm Eickhoff"
+  ],
+  "targetPath": "bin",
+  "targetType": "sourceLibrary",
+  "dependencies": {
+    "gfm": "~>8.0.5"
+  }
+}
