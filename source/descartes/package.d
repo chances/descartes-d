@@ -1,9 +1,24 @@
+/// Imprecision-tolerant computational geometry.
+///
+/// Authors: Chance Snow
+/// Copyright: Copyright © 2021 Chance Snow. All rights reserved.
+/// License: MIT License
 module descartes;
 
 // https://gfm.dpldocs.info/gfm.math.html
 import gfm.math;
 
 public:
+
+import descartes.angles;
+import descartes.bands;
+import descartes.bbox;
+import descartes.convert;
+import descartes.embedding;
+import descartes.grid;
+import descartes.intersect;
+import descartes.path;
+import descartes.rough;
 
 ///
 alias N = float;
