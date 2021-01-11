@@ -14,4 +14,4 @@ A port of https://github.com/aeplay/descartes, under the [MIT License](https://g
 
 [MIT License](https://opensource.org/licenses/MIT)
 
-Copyright &copy; 2020 Chance Snow. All rights reserved.
+Copyright &copy; 2021 Chance Snow. All rights reserved.
