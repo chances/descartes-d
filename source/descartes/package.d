@@ -42,6 +42,7 @@ alias M4 = mat4!N;
 // TODO: Ensure this is stored as a homogeneous 4x4 matrix.
 /// A 3D affine transformation. Stored as a homogeneous, row-major 4x4 matrix.
 alias Affine3 = mat4!N;
+alias Rotation2 = mat2!N;
 // TODO: Ensure this is stored as a homogeneous 4x4 matrix.
 /// A 3D perspective projection stored as a homogeneous, row-major 4x4 matrix.
 alias Perspective3 = mat4!N;
