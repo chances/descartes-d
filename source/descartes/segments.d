@@ -15,10 +15,15 @@ enum N minLineLength = 0.01;
 ///
 enum N minArcLength = minLineLength;
 
+///
 interface Segment {
+  ///
   @property N length();
+  ///
   @property V2 startDirection();
+  ///
   @property V2 endDirection();
+  ///
   P2[] subdivisionsWithoutEnd(N maxAngle);
 }
 
@@ -89,6 +94,7 @@ struct LineSegment {
     }
   }
 
+  ///
   Nullable!Projection projectWithMaxDistance(P2 point, N tolerance, N maxDistance) {
     const maybeProjection = this.projectWithTolerance(point, tolerance);
     if (!maybeProjection.isNull) {
