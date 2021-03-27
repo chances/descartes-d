@@ -319,43 +319,69 @@ unittest {
 
   // Minor arc test
   auto o = V2(10.0, 5.0);
-  auto minorArc = ArcSegment.make(P2(0.0, 1.0) + o, P2(-3.0f.sqrt / 2.0, 0.5) + o, P2(-1.0, 0.0) + o);
+  const minorArc = ArcSegment.make(P2(0.0, 1.0) + o, P2(-3.0f.sqrt / 2.0, 0.5) + o, P2(-1.0, 0.0) + o);
   assert(!minorArc.isNull);
-  assert(!roughlyEqualTo(minorArc.get.center, P2(0.0, 0.0) + o, tolerance));
-  assert(!minorArc.get.isMinor);
-  assert(!isClose(minorArc.get.length, PI / 2.0, tolerance));
+  assert(roughlyEqualTo(minorArc.get.center, P2(0.0, 0.0) + o, tolerance));
+  assert(minorArc.get.isMinor);
+  assert(isClose(minorArc.get.length, PI / 2.0, tolerance));
 
-  auto minorArcRev = ArcSegment.make(P2(-1.0, 0.0) + o, P2(-3.0f.sqrt / 2.0,
+  const minorArcRev = ArcSegment.make(P2(-1.0, 0.0) + o, P2(-3.0f.sqrt / 2.0,
       0.5) + o, P2(0.0, 1.0) + o);
   assert(!minorArcRev.isNull);
-  assert(!roughlyEqualTo(minorArcRev.get.center, P2(0.0, 0.0) + o, tolerance));
-  assert(!minorArcRev.get.isMinor);
-  assert(!isClose(minorArcRev.get.length, PI / 2.0, tolerance));
+  assert(roughlyEqualTo(minorArcRev.get.center, P2(0.0, 0.0) + o, tolerance));
+  assert(minorArcRev.get.isMinor);
+  assert(isClose(minorArcRev.get.length, PI / 2.0, tolerance));
 
-  auto minorArcByCenter = ArcSegment.minorArcWithCenter(P2(0.0, 1.0) + o,
+  const minorArcByCenter = ArcSegment.minorArcWithCenter(P2(0.0, 1.0) + o,
       P2(0.0, 0.0) + o, P2(-1.0, 0.0) + o);
   assert(!minorArcByCenter.isNull);
-  assert(!roughlyEqualTo(minorArcByCenter.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
-  assert(!isClose(minorArcByCenter.get.length, PI / 2.0, tolerance));
+  assert(roughlyEqualTo(minorArcByCenter.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
+  assert(isClose(minorArcByCenter.get.length, PI / 2.0, tolerance));
 
-  auto minorArcByCenterRev = ArcSegment.minorArcWithCenter(P2(-1.0, 0.0) + o,
+  const minorArcByCenterRev = ArcSegment.minorArcWithCenter(P2(-1.0, 0.0) + o,
       P2(0.0, 0.0) + o, P2(0.0, 1.0) + o);
   assert(!minorArcByCenterRev.isNull);
-  assert(!roughlyEqualTo(minorArcByCenterRev.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
-  assert(!isClose(minorArcByCenterRev.get.length, PI / 2.0, tolerance));
+  assert(roughlyEqualTo(minorArcByCenterRev.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
+  assert(isClose(minorArcByCenterRev.get.length, PI / 2.0, tolerance));
 
-  auto minorArcByDirection = ArcSegment.minorArcWithStartDirection(P2(0.0,
+  const minorArcByDirection = ArcSegment.minorArcWithStartDirection(P2(0.0,
       1.0) + o, V2(-1.0, 0.0), P2(-1.0, 0.0) + o);
   assert(!minorArcByDirection.isNull);
-  assert(!roughlyEqualTo(minorArcByDirection.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
-  assert(!isClose(minorArcByDirection.get.length, PI / 2.0, tolerance));
+  assert(roughlyEqualTo(minorArcByDirection.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
+  assert(isClose(minorArcByDirection.get.length, PI / 2.0, tolerance));
 
-  auto minorArcByDirectionRev = ArcSegment.minorArcWithStartDirection(P2(-1.0,
+  const minorArcByDirectionRev = ArcSegment.minorArcWithStartDirection(P2(-1.0,
       0.0) + o, V2(0.0, 1.0), P2(0.0, 1.0) + o);
   assert(!minorArcByDirectionRev.isNull);
-  assert(!roughlyEqualTo(minorArcByDirectionRev.get.apex, P2(-2.0f.sqrt / 2.0,
+  assert(roughlyEqualTo(minorArcByDirectionRev.get.apex, P2(-2.0f.sqrt / 2.0,
       2.0f.sqrt / 2.0) + o, tolerance));
-  assert(!isClose(minorArcByDirectionRev.get.length, PI / 2.0, tolerance));
+  assert(isClose(minorArcByDirectionRev.get.length, PI / 2.0, tolerance));
+
+  // Colinear apex
+  assert(ArcSegment.make(P2(0.0, 0.0), P2(1.0, 0.0), P2(2.0, 0.0)).isNull);
+
+  // Major arcs
+  o = V2(10.0, 5.0);
+  const majorArc = ArcSegment.make(
+    P2(0.0, -1.0) + o,
+    P2(-3.0f.sqrt / 2.0, 0.5) + o,
+    P2(1.0, 0.0) + o,
+  );
+  assert(!majorArc.isNull);
+  assert(roughlyEqualTo(majorArc.get.center, P2(0.0, 0.0) + o, tolerance));
+  assert(!majorArc.get.isMinor);
+  assert(isClose(majorArc.get.length, 3.0 * PI / 2.0, tolerance));
+
+  const majorArcRev = ArcSegment.make(
+    P2(-1.0, 0.0) + o,
+    P2(-3.0f.sqrt / 2.0, 0.5) + o,
+    P2(0.0, -1.0) + o,
+  );
+  // import std.stdio : writeln;
+  assert(!majorArcRev.isNull);
+  assert(roughlyEqualTo(majorArcRev.get.center, P2(0.0, 0.0) + o, tolerance));
+  assert(!majorArcRev.get.isMinor);
+  assert(isClose(majorArcRev.get.length, 3.0 * PI / 2.0, tolerance));
 }
 
 alias ArcOrLineSegment = Algebraic!(LineSegment, ArcSegment);
