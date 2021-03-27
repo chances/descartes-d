@@ -139,6 +139,8 @@ struct LineSegment {
     const directionOrth = this.direction.orthogonalLeft;
     return (point - this.start).dot(directionOrth);
   }
+
+  // TODO: Add boundingBox getter (https://github.com/chances/descartes/blob/master/src/segments.rs#L124)
 }
 
 ///
@@ -270,3 +272,72 @@ struct ArcSegment {
 }
 
 // TODO: Unit tests: https://github.com/aeplay/descartes/blob/0f31b1830f15a402089832c7a87d74aba3912005/src/segments.rs#L364
+
+import std.variant : Algebraic, visit;
+alias ArcOrLineSegment = Algebraic!(LineSegment, ArcSegment);
+
+///
+@property Nullable!LineSegment line(ArcOrLineSegment arcOrLine) {
+  assert(arcOrLine.hasValue);
+  if (LineSegment* line = arcOrLine.peek!LineSegment) return (*line).nullable;
+  return Nullable!LineSegment.init;
+}
+
+///
+@property Nullable!ArcSegment arc(ArcOrLineSegment arcOrLine) {
+  assert(arcOrLine.hasValue);
+  if (ArcSegment* arc = arcOrLine.peek!ArcSegment) return (*arc).nullable;
+  return Nullable!ArcSegment.init;
+}
+
+////// See_Also: `Segment`
+@property P2 start(ArcOrLineSegment arcOrLine) {
+  return arcOrLine.visit!(
+    (LineSegment line) => line.start,
+    (ArcSegment arc) => arc.start,
+  );
+}
+////// See_Also: `Segment`
+@property P2 end(ArcOrLineSegment arcOrLine) {
+  return arcOrLine.visit!(
+    (LineSegment line) => line.end,
+    (ArcSegment arc) => arc.end,
+  );
+}
+////// See_Also: `Segment`
+@property N length(ArcOrLineSegment arcOrLine) {
+  return arcOrLine.visit!(
+    (LineSegment line) => line.length,
+    (ArcSegment arc) => arc.length,
+  );
+}
+////// See_Also: `Segment`
+@property V2 startDirection(ArcOrLineSegment arcOrLine) {
+  return arcOrLine.visit!(
+    (LineSegment line) => line.startDirection,
+    (ArcSegment arc) => arc.startDirection,
+  );
+}
+////// See_Also: `Segment`
+@property V2 endDirection(ArcOrLineSegment arcOrLine) {
+  return arcOrLine.visit!(
+    (LineSegment line) => line.endDirection,
+    (ArcSegment arc) => arc.endDirection,
+  );
+}
+////// See_Also: `Segment`
+@property P2[] subdivisionsWithoutEnd(ArcOrLineSegment arcOrLine, N maxAngle) {
+  return arcOrLine.visit!(
+    (LineSegment line) => line.subdivisionsWithoutEnd(maxAngle),
+    (ArcSegment arc) => arc.subdivisionsWithoutEnd(maxAngle),
+  );
+}
+
+///
+ArcOrLineSegment lineUnchecked(P2 start, P2 end) {
+  return ArcOrLineSegment(LineSegment(start, end));
+}
+///
+ArcOrLineSegment arcUnchecked(P2 start, P2 apex, P2 end) {
+  return ArcOrLineSegment(ArcSegment(start, apex, end));
+}
