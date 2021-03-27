@@ -9,11 +9,16 @@ import descartes : P2, Rotation2, thickness, V2, N, norm;
 import descartes.angles : signedAngleTo;
 import std.math : abs, isNaN, PI;
 import std.typecons : Nullable, nullable;
+import std.variant : Algebraic, visit;
 
 ///
 enum N minLineLength = 0.01;
 ///
 enum N minArcLength = minLineLength;
+
+version (unittest) {
+  enum float toleranceerance = 0.0001;
+}
 
 ///
 interface Segment {
@@ -76,27 +81,27 @@ struct LineSegment {
   }
 
   ///
-  Nullable!Projection projectWithTolerance(P2 point, N tolerance) {
+  Nullable!Projection rojectWithdtoleranceerance(P2 point, N toleranceerance) {
     import gfm.math : dot;
 
-    if ((point - this.start).norm < tolerance) {
-        return Projection(0.0, this.start).nullable;
-    } else if ((point - this.end).norm < tolerance) {
-        return Projection(this.length(), this.end).nullable;
+    if ((point - this.start).norm < toleranceerance) {
+      return Projection(0.0, this.start).nullable;
+    } else if ((point - this.end).norm < toleranceerance) {
+      return Projection(this.length(), this.end).nullable;
     } else {
-        const direction = this.direction;
-        const lineOffset = direction.dot(point - this.start);
-        if (lineOffset >= 0.0 && lineOffset <= this.length()) {
-          return Projection(lineOffset, this.start + lineOffset * direction).nullable;
-        } else {
-          return Nullable!Projection.init;
-        }
+      const direction = this.direction;
+      const lineOffset = direction.dot(point - this.start);
+      if (lineOffset >= 0.0 && lineOffset <= this.length()) {
+        return Projection(lineOffset, this.start + lineOffset * direction).nullable;
+      } else {
+        return Nullable!Projection.init;
+      }
     }
   }
 
   ///
-  Nullable!Projection projectWithMaxDistance(P2 point, N tolerance, N maxDistance) {
-    const maybeProjection = this.projectWithTolerance(point, tolerance);
+  Nullable!Projection projectWithMaxDistance(P2 point, N toleranceerance, N maxDistance) {
+    const maybeProjection = this.rojectWithdtoleranceerance(point, toleranceerance);
     if (!maybeProjection.isNull) {
       const projection = maybeProjection.get;
       if ((projection.projectedPoint - point).norm <= maxDistance) {
@@ -158,9 +163,9 @@ struct ArcSegment {
   static Nullable!ArcSegment make(P2 start, P2 apex, P2 end) {
     import std.math : isInfinity;
 
-    if ((start - apex).norm < minLineLength
-        || (end - apex).norm < minLineLength
-        || (start - end).norm < minArcLength) return Nullable!ArcSegment.init;
+    if ((start - apex).norm < minLineLength || (end - apex).norm < minLineLength
+        || (start - end).norm < minArcLength)
+      return Nullable!ArcSegment.init;
     auto segment = ArcSegment(start, apex, end);
     const center = segment.center;
     if (center.x.isNaN || center.y.isNaN || center.x.isInfinity || center.y.isInfinity)
@@ -171,9 +176,7 @@ struct ArcSegment {
   /// See_Also: `Segment`
   N length() @property const {
     const simpleAngleSpan = this.signedAngleSpan.abs;
-    const angleSpan = this.isMinor
-      ? simpleAngleSpan
-      : 2.0 * PI - simpleAngleSpan;
+    const angleSpan = this.isMinor ? simpleAngleSpan : 2.0 * PI - simpleAngleSpan;
     return this.radius * angleSpan;
   }
 
@@ -183,8 +186,7 @@ struct ArcSegment {
     const centerToStartOrth = (this.start - center).orthogonalRight();
 
     return LineSegment(this.start, this.end).isPointLeftOf(this.apex)
-      ?  centerToStartOrth
-      : -centerToStartOrth;
+      ? centerToStartOrth : -centerToStartOrth;
   }
 
   /// See_Also: `Segment`
@@ -193,8 +195,7 @@ struct ArcSegment {
     const centerToEndOrth = (this.end - center).orthogonalRight();
 
     return LineSegment(this.start, this.end).isPointLeftOf(this.apex)
-      ?  centerToEndOrth
-      : -centerToEndOrth;
+      ? centerToEndOrth : -centerToEndOrth;
   }
 
   /// See_Also: `Segment`
@@ -222,22 +223,25 @@ struct ArcSegment {
 
     return iota(0, subdivisions.fmax(1)).map!(_ => {
       auto point = center + pointer;
-      pointer =
-        Rotation2(subdivisionAngle.cos, -subdivisionAngle.sin, subdivisionAngle.sin, subdivisionAngle.cos) * pointer;
+      pointer = Rotation2(subdivisionAngle.cos, -subdivisionAngle.sin,
+        subdivisionAngle.sin, subdivisionAngle.cos) * pointer;
 
-        if (!maybePreviousPoint.isNull) {
-          const previousPoint = maybePreviousPoint.get;
-            if ((point - previousPoint).norm > 2.0 * thickness) {
-              maybePreviousPoint = point.nullable;
-              return point.nullable;
-            } else {
-              return Nullable!P2.init;
-            }
-        } else {
+      if (!maybePreviousPoint.isNull) {
+        const previousPoint = maybePreviousPoint.get;
+        if ((point - previousPoint).norm > 2.0 * thickness) {
           maybePreviousPoint = point.nullable;
           return point.nullable;
+        } else {
+          return Nullable!P2.init;
         }
-    }()).filter!(x => !x.isNull).map!(x => x.get).array;
+      } else {
+        maybePreviousPoint = point.nullable;
+        return point.nullable;
+      }
+    }())
+      .filter!(x => !x.isNull)
+      .map!(x => x.get)
+      .array;
   }
 
   P2 center() @property const {
@@ -273,64 +277,50 @@ struct ArcSegment {
 
 // TODO: Unit tests: https://github.com/aeplay/descartes/blob/0f31b1830f15a402089832c7a87d74aba3912005/src/segments.rs#L364
 
-import std.variant : Algebraic, visit;
 alias ArcOrLineSegment = Algebraic!(LineSegment, ArcSegment);
 
 ///
 @property Nullable!LineSegment line(ArcOrLineSegment arcOrLine) {
   assert(arcOrLine.hasValue);
-  if (LineSegment* line = arcOrLine.peek!LineSegment) return (*line).nullable;
+  if (LineSegment* line = arcOrLine.peek!LineSegment)
+    return (*line).nullable;
   return Nullable!LineSegment.init;
 }
 
 ///
 @property Nullable!ArcSegment arc(ArcOrLineSegment arcOrLine) {
   assert(arcOrLine.hasValue);
-  if (ArcSegment* arc = arcOrLine.peek!ArcSegment) return (*arc).nullable;
+  if (ArcSegment* arc = arcOrLine.peek!ArcSegment)
+    return (*arc).nullable;
   return Nullable!ArcSegment.init;
 }
 
 ////// See_Also: `Segment`
 @property P2 start(ArcOrLineSegment arcOrLine) {
-  return arcOrLine.visit!(
-    (LineSegment line) => line.start,
-    (ArcSegment arc) => arc.start,
-  );
+  return arcOrLine.visit!((LineSegment line) => line.start, (ArcSegment arc) => arc.start,);
 }
 ////// See_Also: `Segment`
 @property P2 end(ArcOrLineSegment arcOrLine) {
-  return arcOrLine.visit!(
-    (LineSegment line) => line.end,
-    (ArcSegment arc) => arc.end,
-  );
+  return arcOrLine.visit!((LineSegment line) => line.end, (ArcSegment arc) => arc.end,);
 }
 ////// See_Also: `Segment`
 @property N length(ArcOrLineSegment arcOrLine) {
-  return arcOrLine.visit!(
-    (LineSegment line) => line.length,
-    (ArcSegment arc) => arc.length,
-  );
+  return arcOrLine.visit!((LineSegment line) => line.length, (ArcSegment arc) => arc.length,);
 }
 ////// See_Also: `Segment`
 @property V2 startDirection(ArcOrLineSegment arcOrLine) {
-  return arcOrLine.visit!(
-    (LineSegment line) => line.startDirection,
-    (ArcSegment arc) => arc.startDirection,
-  );
+  return arcOrLine.visit!((LineSegment line) => line.startDirection,
+      (ArcSegment arc) => arc.startDirection,);
 }
 ////// See_Also: `Segment`
 @property V2 endDirection(ArcOrLineSegment arcOrLine) {
-  return arcOrLine.visit!(
-    (LineSegment line) => line.endDirection,
-    (ArcSegment arc) => arc.endDirection,
-  );
+  return arcOrLine.visit!((LineSegment line) => line.endDirection,
+      (ArcSegment arc) => arc.endDirection,);
 }
 ////// See_Also: `Segment`
 @property P2[] subdivisionsWithoutEnd(ArcOrLineSegment arcOrLine, N maxAngle) {
-  return arcOrLine.visit!(
-    (LineSegment line) => line.subdivisionsWithoutEnd(maxAngle),
-    (ArcSegment arc) => arc.subdivisionsWithoutEnd(maxAngle),
-  );
+  return arcOrLine.visit!((LineSegment line) => line.subdivisionsWithoutEnd(maxAngle),
+      (ArcSegment arc) => arc.subdivisionsWithoutEnd(maxAngle),);
 }
 
 ///
