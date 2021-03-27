@@ -313,7 +313,50 @@ struct ArcSegment {
   }
 }
 
-// TODO: Unit tests: https://github.com/aeplay/descartes/blob/0f31b1830f15a402089832c7a87d74aba3912005/src/segments.rs#L364
+unittest {
+  import descartes : roughlyEqualTo;
+  import std.math : isClose, sqrt;
+
+  // Minor arc test
+  auto o = V2(10.0, 5.0);
+  auto minorArc = ArcSegment.make(P2(0.0, 1.0) + o, P2(-3.0f.sqrt / 2.0, 0.5) + o, P2(-1.0, 0.0) + o);
+  assert(!minorArc.isNull);
+  assert(!roughlyEqualTo(minorArc.get.center, P2(0.0, 0.0) + o, tolerance));
+  assert(!minorArc.get.isMinor);
+  assert(!isClose(minorArc.get.length, PI / 2.0, tolerance));
+
+  auto minorArcRev = ArcSegment.make(P2(-1.0, 0.0) + o, P2(-3.0f.sqrt / 2.0,
+      0.5) + o, P2(0.0, 1.0) + o);
+  assert(!minorArcRev.isNull);
+  assert(!roughlyEqualTo(minorArcRev.get.center, P2(0.0, 0.0) + o, tolerance));
+  assert(!minorArcRev.get.isMinor);
+  assert(!isClose(minorArcRev.get.length, PI / 2.0, tolerance));
+
+  auto minorArcByCenter = ArcSegment.minorArcWithCenter(P2(0.0, 1.0) + o,
+      P2(0.0, 0.0) + o, P2(-1.0, 0.0) + o);
+  assert(!minorArcByCenter.isNull);
+  assert(!roughlyEqualTo(minorArcByCenter.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
+  assert(!isClose(minorArcByCenter.get.length, PI / 2.0, tolerance));
+
+  auto minorArcByCenterRev = ArcSegment.minorArcWithCenter(P2(-1.0, 0.0) + o,
+      P2(0.0, 0.0) + o, P2(0.0, 1.0) + o);
+  assert(!minorArcByCenterRev.isNull);
+  assert(!roughlyEqualTo(minorArcByCenterRev.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
+  assert(!isClose(minorArcByCenterRev.get.length, PI / 2.0, tolerance));
+
+  auto minorArcByDirection = ArcSegment.minorArcWithStartDirection(P2(0.0,
+      1.0) + o, V2(-1.0, 0.0), P2(-1.0, 0.0) + o);
+  assert(!minorArcByDirection.isNull);
+  assert(!roughlyEqualTo(minorArcByDirection.get.apex, P2(-2.0f.sqrt / 2.0, 2.0f.sqrt / 2.0) + o, tolerance));
+  assert(!isClose(minorArcByDirection.get.length, PI / 2.0, tolerance));
+
+  auto minorArcByDirectionRev = ArcSegment.minorArcWithStartDirection(P2(-1.0,
+      0.0) + o, V2(0.0, 1.0), P2(0.0, 1.0) + o);
+  assert(!minorArcByDirectionRev.isNull);
+  assert(!roughlyEqualTo(minorArcByDirectionRev.get.apex, P2(-2.0f.sqrt / 2.0,
+      2.0f.sqrt / 2.0) + o, tolerance));
+  assert(!isClose(minorArcByDirectionRev.get.length, PI / 2.0, tolerance));
+}
 
 alias ArcOrLineSegment = Algebraic!(LineSegment, ArcSegment);
 
