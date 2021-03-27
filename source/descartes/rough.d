@@ -13,7 +13,7 @@ enum float thickness = 0.001;
 ///
 enum double roughTolerance = 0.000_000_1;
 
-// TODO: How do these compare to [std.math.approxEqual](https://dlang.org/library/std/math/approx_equal.html)?
+// TODO: How do these compare to [std.math.isClose](https://dlang.org/library/std/math/is_close.html)?
 
 ///
 bool roughlyEqualTo(N a, N b, N tolerance = roughTolerance) {

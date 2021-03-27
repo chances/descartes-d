@@ -36,22 +36,22 @@ N signedAngleTo(V2 a, V2 b) {
 
 unittest {
   import descartes : up, down, left, right;
-  import std.math : approxEqual;
+  import std.math : isClose;
 
   assert(V2(3).angleTo(V2(4)) == 0.0);
   assert((V2(3, 0).angleTo(V2(0, -4))) == 0.0);
   assert((V2(3, 7).angleTo(V2(2, -4))) == 0.0);
-  assert((V2(3, 0).angleTo(V2(0, 4))).approxEqual(1.5708));
+  assert((V2(3, 0).angleTo(V2(0, 4))).isClose(1.5708));
 
-  assert((V2(3, 0).angleAlongTo(up, V2(3, 4))).approxEqual(6.28319));
+  assert((V2(3, 0).angleAlongTo(up, V2(3, 4))).isClose(6.28319));
   assert((V2(3, 0).angleAlongTo(down, V2(3, 4))) == 0.0);
   assert((V2(3, 0).angleAlongTo(left, V2(3, 4))) == 0.0);
   assert((V2(3, 0).angleAlongTo(right, V2(3, 4))) == 0.0);
 
   assert(V2(3).signedAngleTo(V2(4)) == 0.0);
-  assert(V2(3, 0).signedAngleTo(V2(0, -4)).approxEqual(-1.5708));
-  assert(V2(3, 7).signedAngleTo(V2(2, -4)).approxEqual(-2.27305));
-  assert(V2(3, 0).signedAngleTo(V2(0, 4)).approxEqual(1.5708));
+  assert(V2(3, 0).signedAngleTo(V2(0, -4)).isClose(-1.5708));
+  assert(V2(3, 7).signedAngleTo(V2(2, -4)).isClose(-2.27305));
+  assert(V2(3, 0).signedAngleTo(V2(0, 4)).isClose(1.5708));
 }
 
 ///
