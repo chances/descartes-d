@@ -51,10 +51,10 @@ alias Perspective3 = mat4!N;
 /// Computes the L2 (Euclidean) norm of a point.
 /// See_Also: <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm">Norm (mathematics): Euclidean norm</a> on Wikipedia
 N norm(V2 x) {
-  import std.algorithm : sum;
+  import std.algorithm : map, sum;
   import std.math : sqrt;
 
-  return sqrt(x.v[].sum);
+  return sqrt(x.v[].map!"a * a".sum);
 }
 
 version (unittest) {
