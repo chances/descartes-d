@@ -17,7 +17,7 @@ enum N minLineLength = 0.01;
 enum N minArcLength = minLineLength;
 
 version (unittest) {
-  enum float toleranceerance = 0.0001;
+  enum float tolerance = 0.0001;
 }
 
 ///
@@ -159,6 +159,13 @@ struct ArcSegment {
   ///
   P2 end;
 
+  @disable this();
+  private this(P2 start, P2 apex, P2 end) {
+    this.start = start;
+    this.apex = apex;
+    this.end = end;
+  }
+
   ///
   static Nullable!ArcSegment make(P2 start, P2 apex, P2 end) {
     import std.math : isInfinity;
@@ -171,6 +178,37 @@ struct ArcSegment {
     if (center.x.isNaN || center.y.isNaN || center.x.isInfinity || center.y.isInfinity)
       return Nullable!ArcSegment.init;
     return segment.nullable;
+  }
+
+  ///
+  static Nullable!ArcSegment minorArcWithCenter(P2 start, P2 center, P2 end) {
+    import descartes : signedAngleTo;
+
+    const centerToStart = start - center;
+    const centerToEnd = end - center;
+    const radius = centerToStart.norm;
+
+    const sum = centerToStart + centerToEnd;
+
+    const apex = sum.norm > 0.01
+      ? center + sum.normalized * radius
+      : center + Rotation2(signedAngleTo(centerToStart, centerToEnd) / 2.0) * centerToStart;
+
+    // TODO: avoid redundant calculation of center, but still check for validity somehow
+    return ArcSegment.make(start, apex, end);
+  }
+
+  ///
+  static Nullable!ArcSegment minorArcWithStartDirection(P2 start, V2 startDirection, P2 end) {
+    import gfm.math : dot;
+
+    const halfChord = (end - start) / 2.0;
+    const halfChordNormSquared = halfChord.norm * halfChord.norm;
+    const signedRadius = halfChordNormSquared / startDirection.orthogonalRight().dot(halfChord);
+
+    const center = start + signedRadius * startDirection.orthogonalRight();
+
+    return ArcSegment.minorArcWithCenter(start, center, end);
   }
 
   /// See_Also: `Segment`
