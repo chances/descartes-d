@@ -6,8 +6,6 @@ LIBS_PATH := lib
 .DEFAULT_GOAL := docs
 all: docs
 
-COVERAGE_TARGETS := $(shell find . -name '-tmp*.lst') $(shell find . -name '..*.lst')
-
 test:
 	dub test
 	@rm -f $(COVERAGE_TARGETS)
@@ -27,8 +25,7 @@ docs: docs/sitemap.xml
 .PHONY: docs
 
 clean: clean-docs
-	rm -rf bin
-	rm -f -- *.lst ..*.lst
+	rm -rf bin coverage
 .PHONY: clean
 
 clean-docs:

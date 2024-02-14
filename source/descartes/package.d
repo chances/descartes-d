@@ -8,6 +8,17 @@ module descartes;
 // https://gfm.dpldocs.info/gfm.math.html
 import gfm.math;
 
+// Emit coverage artifacts to ./coverage
+version(D_Coverage) shared static this() {
+  import core.runtime : dmd_coverDestPath;
+  import std.file : exists, mkdir;
+
+  enum COV_PATH = "coverage";
+
+  if(!COV_PATH.exists) COV_PATH.mkdir;
+  dmd_coverDestPath(COV_PATH);
+}
+
 public:
 
 import descartes.angles;
