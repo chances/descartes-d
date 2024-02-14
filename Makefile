@@ -1,14 +1,16 @@
 CWD := $(shell pwd)
 SOURCES := $(shell find source -name '*.d')
-EXAMPLES := $(shell find examples -name '*.d')
 TARGET_OS := $(shell uname -s)
 LIBS_PATH := lib
 
 .DEFAULT_GOAL := docs
 all: docs
 
+COVERAGE_TARGETS := $(shell find . -name '-tmp*.lst') $(shell find . -name '..*.lst')
+
 test:
 	dub test
+	@rm -f $(COVERAGE_TARGETS)
 .PHONY: test
 
 cover: $(SOURCES)
@@ -25,12 +27,14 @@ docs: docs/sitemap.xml
 .PHONY: docs
 
 clean: clean-docs
-	rm -rf bin $(EXAMPLES)
-	rm -f -- *.lst
+	rm -rf bin
+	rm -f -- *.lst ..*.lst
 .PHONY: clean
 
 clean-docs:
+ifeq ($(shell test -d docs && echo -n yes),yes)
 	rm -f docs.json
 	rm -f docs/sitemap.xml docs/file_hashes.json
 	rm -rf `find docs -name '*.html'`
+endif
 .PHONY: clean-docs
