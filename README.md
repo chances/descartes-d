@@ -20,7 +20,7 @@ Imprecision-tolerant computational geometry for [D](https://dlang.org).
 
 A port of https://github.com/aeplay/descartes, under the [MIT License](https://github.com/aeplay/descartes/blob/master/LICENSE):
 
-> Copyright &copy; 2018 Anselm Eickhoff
+> Copyright &copy; 2018-2024 Anselm Eickhoff
 
 [MIT License](https://opensource.org/licenses/MIT)
 
