@@ -11,5 +11,12 @@
   "targetType": "sourceLibrary",
   "dependencies": {
     "gfm": "~>8.0.5"
-  }
+  },
+  "configurations": [
+    { "name": "library" },
+    {
+      "name": "static",
+      "targetType": "staticLibrary"
+    }
+  ]
 }
