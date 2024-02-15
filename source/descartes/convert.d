@@ -35,8 +35,8 @@ V2 to2d(V3 vector, Swizzle swizzle = Swizzle.xy) {
 /// swizzle=How the given `vector` should be swizzled to 3D.
 /// See_Also: <a href="https://en.wikipedia.org/wiki/Swizzling_(computer_graphics)">Swizzling (computer graphics)</a> on Wikipedia
 V3 to3d(V2 vector, Swizzle swizzle = Swizzle.xy) {
-  if (swizzle == Swizzle.xy) return V3(vector.xy.v ~ 0.0);
-  if (swizzle == Swizzle.xz) return V3(vector.x, 0.0, vector.y);
+  if (swizzle == Swizzle.xy) return V3(vector.xy.v ~ 0);
+  if (swizzle == Swizzle.xz) return V3(vector.x, 0, vector.y);
   assert(0, "Unreachable");
 }
 

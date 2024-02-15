@@ -17,6 +17,10 @@
     {
       "name": "static",
       "targetType": "staticLibrary"
+    },
+    {
+      "name": "fixed_point",
+      "versions": [ "FixedPoint" ]
     }
   ]
 }

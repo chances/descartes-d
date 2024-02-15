@@ -1,7 +1,7 @@
 /// Line and arc segment primitives.
 ///
 /// Authors: Chance Snow
-/// Copyright: Copyright © 2021 Chance Snow. All rights reserved.
+/// Copyright: Copyright © 2021-2024 Chance Snow. All rights reserved.
 /// License: MIT License
 module descartes.segments;
 
@@ -11,14 +11,14 @@ import std.math : abs, isNaN, PI;
 import std.typecons : Nullable, nullable;
 import std.variant : Algebraic, visit;
 
-///
-enum N minLineLength = 0.01;
-///
+/// Minimum length of a line when accounting for imprecision.
+version(FixedPoint) enum N minLineLength = 1;
+/// ditto
+else enum N minLineLength = 0.01;
+/// Minimum length of an arc when accounting for imprecision.
 enum N minArcLength = minLineLength;
 
-version (unittest) {
-  enum float tolerance = 0.0001;
-}
+version (unittest) enum float tolerance = 0.0001;
 
 ///
 interface Segment {
@@ -316,6 +316,8 @@ struct ArcSegment {
 unittest {
   import descartes : roughlyEqualTo;
   import std.math : isClose, sqrt;
+
+  // TODO: Visualize segments: https://css-tricks.com/svg-path-syntax-illustrated-guide
 
   // Minor arc test
   auto o = V2(10.0, 5.0);

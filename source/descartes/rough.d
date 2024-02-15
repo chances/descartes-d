@@ -11,7 +11,9 @@ import std.math : abs;
 /// Thickness radius
 enum float thickness = 0.001;
 ///
-enum double roughTolerance = 0.000_000_1;
+version(FixedPoint) enum int roughTolerance = 0;
+///
+else enum double roughTolerance = 0.000_000_1;
 
 // TODO: How do these compare to [std.math.isClose](https://dlang.org/library/std/math/is_close.html)?
 
@@ -28,22 +30,25 @@ bool roughlyEqualTo(V2 a, V2 b, N tolerance = roughTolerance) {
 unittest {
   import descartes : P2;
 
-  assert( P2(10, 20.0).roughlyEqualTo(P2(10, 20.0 + roughTolerance)));
-  assert(!P2(10, 21.0).roughlyEqualTo(P2(10, 20.0 + roughTolerance)));
-  assert( V2(10, 20.0).roughlyEqualTo(V2(10, 20.0 + roughTolerance)));
-  assert(!V2(10, 21.0).roughlyEqualTo(V2(10, 20.0 + roughTolerance)));
-  assert( P2(10, 20.0).roughlyEqualTo(P2(10, 20.0 + (roughTolerance / 2.0f))));
-  assert(!P2(10, 21.0).roughlyEqualTo(P2(10, 20.0 + (roughTolerance / 2.0f))));
-  assert( V2(10, 20.0).roughlyEqualTo(V2(10, 20.0 + (roughTolerance / 2.0f))));
-  assert(!V2(10, 21.0).roughlyEqualTo(V2(10, 20.0 + (roughTolerance / 2.0f))));
-  assert( P2(10, 20.0).roughlyEqualTo(P2(10, 20.0 + (roughTolerance * 5.0f))));
-  assert(!P2(10, 21.0).roughlyEqualTo(P2(10, 20.0 + (roughTolerance * 5.0f))));
-  assert( V2(10, 20.0).roughlyEqualTo(V2(10, 20.0 + (roughTolerance * 5.0f))));
-  assert(!V2(10, 21.0).roughlyEqualTo(V2(10, 20.0 + (roughTolerance * 5.0f))));
+  assert( P2(10, 20).roughlyEqualTo(P2(10, 20 + roughTolerance)));
+  assert(!P2(10, 21).roughlyEqualTo(P2(10, 20 + roughTolerance)));
+  assert( V2(10, 20).roughlyEqualTo(V2(10, 20 + roughTolerance)));
+  assert(!V2(10, 21).roughlyEqualTo(V2(10, 20 + roughTolerance)));
+  assert( P2(10, 20).roughlyEqualTo(P2(10, 20 + (roughTolerance / 2))));
+  assert(!P2(10, 21).roughlyEqualTo(P2(10, 20 + (roughTolerance / 2))));
+  assert( V2(10, 20).roughlyEqualTo(V2(10, 20 + (roughTolerance / 2))));
+  assert(!V2(10, 21).roughlyEqualTo(V2(10, 20 + (roughTolerance / 2))));
+  assert( P2(10, 20).roughlyEqualTo(P2(10, 20 + (roughTolerance * 5))));
+  assert(!P2(10, 21).roughlyEqualTo(P2(10, 20 + (roughTolerance * 5))));
+  assert( V2(10, 20).roughlyEqualTo(V2(10, 20 + (roughTolerance * 5))));
+  assert(!V2(10, 21).roughlyEqualTo(V2(10, 20 + (roughTolerance * 5))));
 
-  const lowerTolerance = 0.000_1;
-  assert( P2(10, 20.0 + lowerTolerance).roughlyEqualTo(P2(10, 20.000_1), lowerTolerance));
-  assert( V2(10, 20.0 + lowerTolerance).roughlyEqualTo(V2(10, 20.000_1), lowerTolerance));
-  // FIXME: assert(!P2(10, 20.000_000_1).roughlyEqualTo(P2(10, 20.000_1), lowerTolerance));
-  // FIXME: assert(!V2(10, 20.000_000_1).roughlyEqualTo(V2(10, 20.000_1), lowerTolerance));
+  version(FixedPoint) {}
+  else {
+    const lowerTolerance = 0.000_1;
+    assert( P2(10, 20 + lowerTolerance).roughlyEqualTo(P2(10, 20.000_1), lowerTolerance));
+    assert( V2(10, 20 + lowerTolerance).roughlyEqualTo(V2(10, 20.000_1), lowerTolerance));
+    // FIXME: assert(!P2(10, 20.000_000_1).roughlyEqualTo(P2(10, 20.000_1), lowerTolerance));
+    // FIXME: assert(!V2(10, 20.000_000_1).roughlyEqualTo(V2(10, 20.000_1), lowerTolerance));
+  }
 }

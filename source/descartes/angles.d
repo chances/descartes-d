@@ -7,14 +7,23 @@ module descartes.angles;
 
 import descartes : N, norm, V2;
 import gfm.math.vector : dot;
+import std.conv : to;
 import std.math : acos, atan2, fmax, fmin, PI;
+version(FixedPoint) import std.math : round;
 
 pragma(inline, true):
+
+private N rounded(real value) {
+  return value.round.to!N;
+}
 
 ///
 N angleTo(V2 a, V2 b) {
   const theta = dot(a, b) / (a.norm * b.norm);
-  return theta.fmin(1.0).fmax(-1.0).acos;
+  const result = theta.fmin(1.0).fmax(-1.0).acos;
+
+  version(FixedPoint) return result.rounded;
+  else return result;
 }
 
 ///
@@ -23,7 +32,10 @@ N angleAlongTo(V2 a, V2 aDirection, V2 b) {
   const linearDirection = (b - a).normalized;
 
   if (aDirection.dot(linearDirection) >= 0) return simpleAngle;
-  return 2.0 * PI - simpleAngle;
+  const result = 2.0 * PI - simpleAngle;
+
+  version(FixedPoint) return result.rounded;
+  else return result;
 }
 
 ///
@@ -31,7 +43,10 @@ N signedAngleTo(V2 a, V2 b) {
   // https://stackoverflow.com/a/2150475
   const det = a.x * b.y - a.y * b.x;
   const dot = a.x * b.x + a.y * b.y;
-  return det.atan2(dot);
+  const result = det.to!float.atan2(dot.to!float);
+
+  version(FixedPoint) return result.rounded;
+  else return result;
 }
 
 unittest {

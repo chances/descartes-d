@@ -31,8 +31,10 @@ import descartes.intersect;
 import descartes.path;
 import descartes.rough;
 
-///
-alias N = float;
+/// Base number type for calculations, Either `int` or `float`. Defaults to `float`.
+/// See_Also: `fixed_point` package configuration
+version(FixedPoint) alias N = int;
+else alias N = float;
 
 /// A stack-allocated, 2-dimensional column vector.
 alias V2 = vec2!N;
@@ -63,9 +65,10 @@ alias Perspective3 = mat4!N;
 /// See_Also: <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm">Norm (mathematics): Euclidean norm</a> on Wikipedia
 N norm(V2 x) {
   import std.algorithm : map, sum;
+  import std.conv : to;
   import std.math : sqrt;
 
-  return sqrt(x.v[].map!"a * a".sum);
+  return sqrt(x.v[].map!"a * a".sum.to!float).to!N;
 }
 
 version (unittest) {
