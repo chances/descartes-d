@@ -81,12 +81,12 @@ struct LineSegment {
   }
 
   ///
-  Nullable!Projection rojectWithdtoleranceerance(P2 point, N toleranceerance) {
+  Nullable!Projection projectWithTolerance(P2 point, N tolerance) {
     import gfm.math : dot;
 
-    if ((point - this.start).norm < toleranceerance) {
+    if ((point - this.start).norm < tolerance) {
       return Projection(0.0, this.start).nullable;
-    } else if ((point - this.end).norm < toleranceerance) {
+    } else if ((point - this.end).norm < tolerance) {
       return Projection(this.length(), this.end).nullable;
     } else {
       const direction = this.direction;
@@ -100,8 +100,8 @@ struct LineSegment {
   }
 
   ///
-  Nullable!Projection projectWithMaxDistance(P2 point, N toleranceerance, N maxDistance) {
-    const maybeProjection = this.rojectWithdtoleranceerance(point, toleranceerance);
+  Nullable!Projection projectWithMaxDistance(P2 point, N tolerance, N maxDistance) {
+    const maybeProjection = this.projectWithTolerance(point, tolerance);
     if (!maybeProjection.isNull) {
       const projection = maybeProjection.get;
       if ((projection.projectedPoint - point).norm <= maxDistance) {
@@ -259,7 +259,7 @@ struct ArcSegment {
     import std.array : array;
     import std.range : iota;
 
-    return iota(0, subdivisions.fmax(1)).map!(_ => {
+    return iota(0, subdivisions.fmax(1)).map!((_) {
       auto point = center + pointer;
       pointer = Rotation2(subdivisionAngle.cos, -subdivisionAngle.sin,
         subdivisionAngle.sin, subdivisionAngle.cos) * pointer;
@@ -276,7 +276,7 @@ struct ArcSegment {
         maybePreviousPoint = point.nullable;
         return point.nullable;
       }
-    }())
+    })
       .filter!(x => !x.isNull)
       .map!(x => x.get)
       .array;
