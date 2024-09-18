@@ -56,7 +56,7 @@ unittest {
 
 ///
 /// Warning:
-/// Descarte assumes a right-hand coordinate system.
+/// Descartes assumes a right-hand coordinate system.
 ///
 /// Positive angles are counter-clockwise if z-axis points offscreen.
 V2 orthogonalRight(V2 self) {
@@ -65,7 +65,7 @@ V2 orthogonalRight(V2 self) {
 
 ///
 /// Warning:
-/// Descarte assumes a right-hand coordinate system.
+/// Descartes assumes a right-hand coordinate system.
 ///
 /// Positive angles are counter-clockwise if z-axis points offscreen.
 V2 orthogonalLeft(V2 self) {
