@@ -33,7 +33,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-dub-
     - name: Lint
-      run: dub lint
+      run: dub run dscanner -- --styleCheck source
     - name: Test
       run: dub test --coverage
     - name: Upload Coverage to Codecov
